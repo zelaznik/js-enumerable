@@ -439,5 +439,22 @@ describe("Enumerable", function () {
       const result = e.reduce(reverseMapper);
       expect(result).to.eql({ a: 1, b: 2, c: 3, d: 4, e: 5 });
     });
+
+    it("accepts falsy values as seeds", function () {
+      function reverseMapper(array, value, index) {
+        array = array || {};
+        array[value] = index;
+        return array;
+      }
+
+      const e = new MyEnumerable(function* () {
+        for (const letter of "abcde") {
+          yield letter;
+        }
+      });
+
+      const result = e.reduce(reverseMapper, null);
+      expect(result).to.eql({ a: 0, b: 1, c: 2, d: 3, e: 4 });
+    });
   });
 });
