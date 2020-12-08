@@ -548,7 +548,7 @@ describe("Enumerable", function () {
     });
   });
 
-  describe("indexOf", function () {
+  describe("#indexOf", function () {
     it("returns -1 if no item equals the expected value", function () {
       const e = new MyEnumerable(function* () {
         yield "a";
@@ -584,7 +584,7 @@ describe("Enumerable", function () {
     });
   });
 
-  describe("lastIndexOf", function () {
+  describe("#lastIndexOf", function () {
     it("returns -1 if no item equals the expected value", function () {
       const e = new MyEnumerable(function* () {
         yield "a";
@@ -604,6 +604,41 @@ describe("Enumerable", function () {
       });
 
       expect(e.lastIndexOf("c")).to.eq(3);
+    });
+  });
+
+  describe("#includes", function () {
+    it("returns false if no items equals the expected value", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+      });
+
+      expect(e.includes("d")).to.eq(false);
+    });
+
+    it("returns true if the object is yielded", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+      });
+
+      expect(e.includes("c")).to.eq(true);
+    });
+
+    it("stops iterating after a matching value is found", function () {
+      const fake = sinon.fake();
+      const e = new MyEnumerable(function* () {
+        for (const letter of "abcdefgh") {
+          fake(letter);
+          yield letter;
+        }
+      });
+
+      expect(e.includes("a")).to.eq(true);
+      expect(fake).to.have.been.calledOnceWith("a");
     });
   });
 });
