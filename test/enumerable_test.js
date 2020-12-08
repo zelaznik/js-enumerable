@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { describe, it, beforeEach, context } = require("mocha");
+const { describe, it, beforeEach } = require("mocha");
 const { Enumerable, Enumerator } = require("../lib/enumerator.js");
 const sinon = require("sinon");
 const { fake } = require("sinon");
