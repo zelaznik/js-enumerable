@@ -2,6 +2,7 @@ const { expect } = require("chai");
 const { describe, it, beforeEach, context } = require("mocha");
 const { Enumerable, Enumerator } = require("../lib/enumerator.js");
 const sinon = require("sinon");
+const { fake } = require("sinon");
 
 describe("Enumerable", function () {
   let MyEnumerable;
@@ -455,6 +456,40 @@ describe("Enumerable", function () {
 
       const result = e.reduce(reverseMapper, null);
       expect(result).to.eql({ a: 0, b: 1, c: 2, d: 3, e: 4 });
+    });
+  });
+
+  describe("find", function () {
+    it("returns undefined if no item matches", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+      });
+      expect(e.find(() => false)).to.eq(undefined);
+    });
+
+    it("sends the value and index to the test function and returns the first value that matches", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+      });
+
+      expect(e.find((value, index) => value !== "a" && index === 1)).to.eq("b");
+    });
+
+    it("stops iterating as soon as a match is found", function () {
+      const fake = sinon.fake();
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        fake();
+        yield "b";
+        yield "c";
+      });
+
+      e.find(() => true);
+      expect(fake).not.to.have.been.called;
     });
   });
 });
