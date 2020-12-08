@@ -366,4 +366,78 @@ describe("Enumerable", function () {
       expect([...flat]).to.eql(["a", "b", "c", "d", "e", "f", "g"]);
     });
   });
+
+  describe("#max", function () {
+    it("is undefined when nothing is yielded", function () {
+      const e = new MyEnumerable(this.emptyIterator);
+      expect(e.max()).to.eql(undefined);
+    });
+
+    it("returns the highest numerical value", function () {
+      const e = new MyEnumerable(function* () {
+        for (const value of [4, 9, 6, 8, 7, 3, 8]) {
+          yield value;
+        }
+      });
+
+      expect(e.max()).to.eq(9);
+    });
+  });
+
+  describe("#min", function () {
+    it("is undefined when nothing is yielded", function () {
+      const e = new MyEnumerable(this.emptyIterator);
+      expect(e.min()).to.eql(undefined);
+    });
+
+    it("returns the lowest numerical value", function () {
+      const e = new MyEnumerable(function* () {
+        for (const value of [4, 9, 4, 5, 6, 0, 1]) {
+          yield value;
+        }
+      });
+
+      expect(e.min()).to.eq(0);
+    });
+  });
+
+  describe("reduce", function () {
+    it("is undefined when nothing is yielded", function () {
+      const e = new MyEnumerable(this.emptyIterator);
+      expect(e.reduce()).to.eql(undefined);
+    });
+
+    it("starts with a seed, and passes it and the reducer through each item", function () {
+      function reverseMapper(array, value, index) {
+        array[value] = index;
+        return array;
+      }
+
+      const e = new MyEnumerable(function* () {
+        for (const letter of "abcde") {
+          yield letter;
+        }
+      });
+
+      const result = e.reduce(reverseMapper, {});
+      expect(result).to.eql({ a: 0, b: 1, c: 2, d: 3, e: 4 });
+    });
+
+    it("uses the first item as a seed if no seed is provided", function () {
+      function reverseMapper(array, value, index) {
+        array[value] = index;
+        return array;
+      }
+
+      const e = new MyEnumerable(function* () {
+        yield {}; // This is going to be the "seed";
+        for (const letter of "abcde") {
+          yield letter;
+        }
+      });
+
+      const result = e.reduce(reverseMapper);
+      expect(result).to.eql({ a: 1, b: 2, c: 3, d: 4, e: 5 });
+    });
+  });
 });
