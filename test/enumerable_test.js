@@ -492,4 +492,59 @@ describe("Enumerable", function () {
       expect(fake).not.to.have.been.called;
     });
   });
+
+  describe("#zip", function () {
+    let zip;
+
+    beforeEach(function () {
+      const e = new MyEnumerable(function* () {
+        for (const letter of "abcde") {
+          yield letter;
+        }
+      });
+      zip = e.zip(function* () {
+        for (let i = 0; i < 10; i++) {
+          yield i;
+        }
+      });
+    });
+
+    it("is evaluated lazily", function () {
+      expect(zip).to.be.instanceOf(Enumerator);
+      expect(this.lazySpy).not.to.have.been.called;
+    });
+
+    it("cannot exhaust the iterator", function () {
+      expect([...zip]).to.eql([...zip]);
+      expect([...zip]).not.to.eql([]);
+    });
+
+    it("yield pairs of items from each iterator", function () {
+      expect([...zip]).to.eql([
+        ["a", 0],
+        ["b", 1],
+        ["c", 2],
+        ["d", 3],
+        ["e", 4],
+      ]);
+    });
+
+    it("stops iterating once the other iterator has finished", function () {
+      const e = new MyEnumerable(function* () {
+        for (const letter of "abcde") {
+          yield letter;
+        }
+      });
+
+      zip = e.zip(function* () {
+        yield 0;
+        yield 1;
+      });
+
+      expect([...zip]).to.eql([
+        ["a", 0],
+        ["b", 1],
+      ]);
+    });
+  });
 });
