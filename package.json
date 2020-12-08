@@ -1,0 +1,17 @@
+{
+  "name": "enumerable",
+  "version": "1.0.0",
+  "description": "A lazy enumerator/enumerable implementation for javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Steve Zelaznik",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "sinon": "^9.2.1",
+    "sinon-chai": "^3.5.0"
+  }
+}
