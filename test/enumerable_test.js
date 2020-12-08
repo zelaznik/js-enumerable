@@ -547,4 +547,63 @@ describe("Enumerable", function () {
       ]);
     });
   });
+
+  describe("indexOf", function () {
+    it("returns -1 if no item equals the expected value", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+      });
+
+      expect(e.indexOf("d")).to.eq(-1);
+    });
+
+    it("returns the first index where the expected value is", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+        yield "c";
+      });
+
+      expect(e.indexOf("c")).to.eq(2);
+    });
+
+    it("stops iterating after a matching value is found", function () {
+      const fake = sinon.fake();
+      const e = new MyEnumerable(function* () {
+        for (const letter of "abcdefgh") {
+          fake(letter);
+          yield letter;
+        }
+      });
+
+      expect(e.indexOf("a")).to.eq(0);
+      expect(fake).to.have.been.calledOnceWith("a");
+    });
+  });
+
+  describe("lastIndexOf", function () {
+    it("returns -1 if no item equals the expected value", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+      });
+
+      expect(e.lastIndexOf("d")).to.eq(-1);
+    });
+
+    it("returns the last index where the expected value is", function () {
+      const e = new MyEnumerable(function* () {
+        yield "a";
+        yield "b";
+        yield "c";
+        yield "c";
+      });
+
+      expect(e.lastIndexOf("c")).to.eq(3);
+    });
+  });
 });
