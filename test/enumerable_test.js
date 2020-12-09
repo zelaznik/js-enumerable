@@ -54,7 +54,7 @@ describe("Enumerable", function () {
       expect(e.toArray()).to.eql([]);
     });
 
-    it("returns the an array of the items yielded", function () {
+    it("returns an array of the items yielded", function () {
       const e = new MyEnumerable(this.abcIterator);
       expect(e.toArray()).to.eql(["a", "b", "c"]);
     });
@@ -101,7 +101,7 @@ describe("Enumerable", function () {
       expect([...filter]).not.to.eql([]);
     });
 
-    it("transforms each item", function () {
+    it("yields only the items that meet the criteria", function () {
       expect([...filter]).to.eql(["b", "c"]);
     });
   });
